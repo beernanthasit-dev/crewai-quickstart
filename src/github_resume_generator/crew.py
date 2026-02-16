@@ -95,7 +95,6 @@ class GithubResumeGenerator:
     def resume_generation_task(self) -> Task:
         return Task(
             config=self.tasks_config['resume_generation_task'],
-            # output_file='resume.md' # Optional: define output file for the resume
         )
 
     @crew
