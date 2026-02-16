@@ -20,7 +20,7 @@ import traceback
 
 from crewai.agents.parser import AgentFinish
 from crewai.tasks.task_output import TaskOutput
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 import urllib.parse
@@ -72,8 +72,8 @@ async def _process_resume(username: str, output_queue: asyncio.Queue):
 async def process_resume_stream(username: str):
     """Handle resume API request, with streamed progress events."""
 
-    username, *_ = re.split(r'\s+', username.strip())
-    username = username[:128]
+    if not re.match(r"^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$", username, re.I):
+        raise HTTPException(status_code=400, detail="Invalid GitHub username")
 
     async def generate_updates():
         update_queue = asyncio.Queue()
