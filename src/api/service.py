@@ -15,7 +15,6 @@
 import asyncio
 import json
 import pathlib
-import re
 import traceback
 
 from crewai.agents.parser import AgentFinish
@@ -72,7 +71,8 @@ async def _process_resume(username: str, output_queue: asyncio.Queue):
 async def process_resume_stream(username: str):
     """Handle resume API request, with streamed progress events."""
 
-    username, *_ = re.split(r'\s+', username.strip())
+    parts = username.split(None, 1)
+    username = parts[0] if parts else ""
     username = username[:128]
 
     async def generate_updates():
